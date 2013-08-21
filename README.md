@@ -1,7 +1,7 @@
 Markdown to HTML Render
 ===
 
-A simple markdown render using [GitHub Markdown Rendering API](http://http://developer.github.com/v3/markdown).
+A simple markdown render using [GitHub Markdown Rendering API](http://developer.github.com/v3/markdown).
 
 It converts a Markdown file to ready-to-view HTML file.
 
