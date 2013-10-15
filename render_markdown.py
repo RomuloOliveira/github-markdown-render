@@ -316,8 +316,9 @@ def get_path(file):
 def parse_args():
     args = [get_path(arg.decode('utf-8')) for arg in sys.argv[1:]]
 
-    if 1 <= len(args) <= 2:
-        arg_names = ['input', 'output']
+    arg_names = ['input', 'output', 'context']
+
+    if 1 <= len(args) <= len(arg_names):
 
         # Returns a dict { input: '', output: '' }
         return dict(zip(arg_names, args))
@@ -340,9 +341,11 @@ def execute():
 
         content = {
             'text': open(args['input'], 'rb').read(),
-            'mode': 'gfm'#,
-            #'context': args['context']
+            'mode': 'gfm'
         }
+
+        if 'context' in args:
+            content['context'] = args['context']
 
         res = requests.post(url, data=json.dumps(content), headers=headers)
 
