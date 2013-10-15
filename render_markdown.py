@@ -340,7 +340,8 @@ def execute():
 
         content = {
             'text': open(args['input'], 'rb').read(),
-            'mode': 'gfm'
+            'mode': 'gfm'#,
+            #'context': args['context']
         }
 
         res = requests.post(url, data=json.dumps(content), headers=headers)
