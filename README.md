@@ -7,7 +7,7 @@ It converts a Markdown file to ready-to-view HTML file.
 
 ### Usage
 ```python
-    python render_markdown.py <input> [<output>]
+python render_markdown.py <input> [<output>]
 ```
 
 #### Options:
@@ -17,3 +17,8 @@ It converts a Markdown file to ready-to-view HTML file.
 
 	<output>:
         Output file to save rendering. Optional.
+
+### Example
+```bash
+python render_markdown.py README.md out.html
+```
