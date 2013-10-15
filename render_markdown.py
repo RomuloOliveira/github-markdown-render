@@ -1,5 +1,5 @@
-#!/usr/bin/python
-##coding:utf8
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import json
 import sys
@@ -10,13 +10,13 @@ from os import path
 HELP = '''
 Converts a Markdown file into a html page using GitHub Markdown Rendering API
 Usage:
-    python render_markdown.py --input=<file> [--output=<output>]
+    python render_markdown.py input [output]
 
-        --input=<file>
-            <file>: Markdown file to render.
+        input
+            Markdown file to render.
 
-        --output=<output>
-            <output>: Output file to save rendering. Optional.
+        output
+            Output file to save rendering. Optional.
 '''
 
 B_CONTENT = '''
@@ -310,23 +310,19 @@ A_CONTENT = '''
   </body>
 </html>'''
 
+def get_path(file):
+    return path.expandvars(path.expanduser(file))
+
 def parse_args():
-    args = dict(arg.split('=') for arg in sys.argv[1:])
-    if (len(args) == 0):
-        print HELP
-        return False
+    args = [get_path(arg.decode('utf-8')) for arg in sys.argv[1:]]
 
-    mandatory_args = [
-        '--input'
-    ]
+    if 1 <= len(args) <= 2:
+        arg_names = ['input', 'output']
 
-    for arg in mandatory_args:
-        if not arg in args:
-            print HELP
-            return False
+        # Returns a dict { input: '', output: '' }
+        return dict(zip(arg_names, args))
 
-    # Returns a array of args without the annoying '--' :)
-    return {key.split('--')[1]: value for key, value in args.iteritems()}
+    print HELP
 
 def write_file(filename, content):
     fl = open(filename, 'wb')
@@ -335,29 +331,31 @@ def write_file(filename, content):
     fl.write(content)
     fl.write(A_CONTENT)
 
-def get_path(file):
-    return path.expandvars(path.expanduser(file))
-
 def execute():
     args = parse_args()
-    if args != False:
-        url = 'https://api.github.com/markdown/raw'
+    if args:
+        url = 'https://api.github.com/markdown'
 
-        headers = {'Content-Type': 'text/x-markdown'}
+        headers = {'Content-Type': 'application/json'}
 
-        data = open(get_path(args['input']), 'rb').read()
+        content = {
+            'text': open(args['input'], 'rb').read(),
+            'mode': 'gfm'
+        }
 
-        res = requests.post(url, data=data, headers=headers)
+        res = requests.post(url, data=json.dumps(content), headers=headers)
 
         if res.status_code == 200 and res.content:
             if 'output' in args:
-                print args['output']
                 write_file(get_path(args['output']), res.content)
                 print 'Done!'
             else:
                 print B_CONTENT
                 print res.content
                 print A_CONTENT
+        else:
+            print 'Error (Status code {})'.format(res.status_code)
+            print res.content
 
 if __name__ == '__main__':
     execute()

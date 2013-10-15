@@ -6,14 +6,14 @@ A simple markdown render using [GitHub Markdown Rendering API](http://developer.
 It converts a Markdown file to ready-to-view HTML file.
 
 ### Usage
-```Python
-    python render_markdown.py --input=<file> [--output=<output>]
+```python
+    python render_markdown.py <input> [<output>]
 ```
 
 #### Options:
 
-	--input=<file>
-		<file>: Markdown file to render.
+	<input>:
+        Markdown file to render.
 
-	--output=<output>
-		<output>: Output file to save rendering. Optional.
+	<output>:
+        Output file to save rendering. Optional.
